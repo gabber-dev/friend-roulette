@@ -106,6 +106,7 @@ export const PersonaCreator = ({ onComplete }: { onComplete: () => void }) => {
             onChange={handleChange}
             rows={4}
             className="w-full bg-black border-2 border-green-500 p-2 text-green-500 focus:outline-none focus:border-green-400"
+            placeholder="You are a... (e.g. a t-rex named Steve, a venture capitalist, a silly dinosaur, etc.)"
             required
           />
         </div>
