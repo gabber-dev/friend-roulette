@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Mic, Keyboard, ArrowLeft, ArrowRight } from 'lucide-react';
 import { useRealtimeSessionEngine } from 'gabber-client-react';
 import { updateSessionPersona } from '@/app/actions';
+import type { ContextMessageToolCall } from 'gabber-client-core';
 
 interface Persona {
   id: string;
@@ -73,7 +74,37 @@ export const MinimalChat = ({ personas }: { personas: Persona[] }) => {
     }
   };
 
+  const handleToolCalls = (message: { tool_calls?: Array<ContextMessageToolCall> }) => {
+    console.log('Tool callsn function:', message.tool_calls);
+
+    if (!message.tool_calls?.length) return;
+    
+    console.log('Tool callsn function in function:', message.tool_calls);
+    message.tool_calls.forEach(toolCall => {
+      if (toolCall.type === 'gabber_tool') {
+        switch (toolCall.function.name) {
+          case 'next_persona':
+            handlePersonaChange('next');
+            break;
+          case 'previous_persona':
+            handlePersonaChange('prev');
+            break;
+          default:
+            console.log('Unknown tool call:', toolCall);
+        }
+      }
+    });
+  };
+
   const displayMessages = sessionMessages || messages;
+
+  useEffect(() => {
+    if (!sessionMessages?.length) return;
+    const lastMessage = sessionMessages[sessionMessages.length - 1];
+    if (lastMessage.agent && lastMessage.tool_calls) {
+      handleToolCalls(lastMessage);
+    }
+  }, [sessionMessages]);
 
   return (
     <div className="border-2 border-green-500 p-4">

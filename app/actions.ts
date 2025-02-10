@@ -40,6 +40,7 @@ export const updateSessionPersona = async (
     // Ensure we have default values for optional UUIDs
     const defaultVoiceId = "21892bb9-9809-4b6f-8c3e-e40093069f04";
     const defaultToolId = "43a9d484-dd12-4aad-9bbd-a8ad54a73fbb";
+    const personaSwitchingToolId = "27cd9fa6-4eec-404a-8c4d-0d98276f65d4";
 
     const updateData = {
         general: {
@@ -54,7 +55,10 @@ export const updateSessionPersona = async (
             persona: personaId.trim(),
             voice_override: voiceId?.trim() || defaultVoiceId,
             scenario: toolId?.trim() || defaultToolId,
-            tool_definitions: [toolId?.trim() || defaultToolId]
+            tool_definitions: [
+                toolId?.trim() || defaultToolId,
+                personaSwitchingToolId
+            ]
         },
         output: {
             stream_transcript: true,
