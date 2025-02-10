@@ -20,6 +20,8 @@ export const PersonaSelector = ({ usageToken, onCreateNew }: {
   const [personas, setPersonas] = useState<Persona[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentPersonaIndex, setCurrentPersonaIndex] = useState(0);
+  const [sessionKey, setSessionKey] = useState(0);
   const { api } = useApi();
 
   useEffect(() => {
@@ -40,6 +42,11 @@ export const PersonaSelector = ({ usageToken, onCreateNew }: {
 
     fetchPersonas();
   }, [api]);
+
+  const handlePersonaChange = async (newIndex: number) => {
+    setCurrentPersonaIndex(newIndex);
+    setSessionKey(prev => prev + 1);
+  };
 
   if (isLoading) {
     return (
@@ -83,14 +90,15 @@ export const PersonaSelector = ({ usageToken, onCreateNew }: {
   return (
     <div className="space-y-6">
       <RealtimeSessionEngineProvider
+        key={sessionKey}
         connectionOpts={{
           token: usageToken,
           config: {
             generative: {
               llm: "21892bb9-9809-4b6f-8c3e-e40093069f04",
-              persona: personas[0]?.id,
+              persona: personas[currentPersonaIndex]?.id,
               scenario: "43a9d484-dd12-4aad-9bbd-a8ad54a73fbb",
-              voice_override: personas[0]?.voice,
+              voice_override: personas[currentPersonaIndex]?.voice,
               tool_definitions: ["27cd9fa6-4eec-404a-8c4d-0d98276f65d4"]
             },
             general: { save_messages: true },
@@ -102,7 +110,11 @@ export const PersonaSelector = ({ usageToken, onCreateNew }: {
           },
         }}
       >
-        <MinimalChat personas={personas} />
+        <MinimalChat 
+          personas={personas} 
+          currentIndex={currentPersonaIndex}
+          onPersonaChange={handlePersonaChange}
+        />
       </RealtimeSessionEngineProvider>
 
       <div className="flex justify-center">

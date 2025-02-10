@@ -21,35 +21,45 @@ interface Message {
   timestamp: Date;
 }
 
-export const MinimalChat = ({ personas }: { personas: Persona[] }) => {
-  const { sendChatMessage, setMicrophoneEnabled, microphoneEnabled, startAudio, id, messages: sessionMessages } = useRealtimeSessionEngine();
+export const MinimalChat = ({ 
+  personas, 
+  currentIndex, 
+  onPersonaChange 
+}: { 
+  personas: Persona[], 
+  currentIndex: number,
+  onPersonaChange: (index: number) => void
+}) => {
+  const { 
+    sendChatMessage, 
+    setMicrophoneEnabled, 
+    microphoneEnabled, 
+    startAudio, 
+    messages: sessionMessages,
+    disconnect
+  } = useRealtimeSessionEngine();
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
   const [showTextInput, setShowTextInput] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  const currentPersona = personas[currentIndex];
 
   const handlePersonaChange = async (direction: 'next' | 'prev') => {
-    if (!id || personas.length <= 1) return;
+    if (personas.length <= 1) return;
+    
+    if (microphoneEnabled) {
+      setMicrophoneEnabled(false);
+    }
+    
+    try {
+      await disconnect();
+    } catch (error) {
+      console.error('Error disconnecting session:', error);
+    }
     
     const newIndex = direction === 'next'
       ? (currentIndex + 1) % personas.length
       : (currentIndex - 1 + personas.length) % personas.length;
     
-    const nextPersona = personas[newIndex];
-    
-    try {
-      await updateSessionPersona(
-        id,
-        nextPersona.id,
-        nextPersona.voice || "21892bb9-9809-4b6f-8c3e-e40093069f04",
-        "43a9d484-dd12-4aad-9bbd-a8ad54a73fbb"
-      );
-      setCurrentIndex(newIndex);
-    } catch (error) {
-      console.error('Error updating persona:', error);
-    }
+    onPersonaChange(newIndex);
   };
 
   const handleMicToggle = async () => {
@@ -116,10 +126,10 @@ export const MinimalChat = ({ personas }: { personas: Persona[] }) => {
         </button>
         
         <div className="flex items-center gap-4">
-          {currentPersona.image_url ? (
+          {personas[currentIndex].image_url ? (
             <img 
-              src={currentPersona.image_url} 
-              alt={currentPersona.name}
+              src={personas[currentIndex].image_url} 
+              alt={personas[currentIndex].name}
               className="w-12 h-12 object-cover rounded-full border-2 border-green-500"
             />
           ) : (
@@ -127,7 +137,7 @@ export const MinimalChat = ({ personas }: { personas: Persona[] }) => {
               <span className="text-green-500">AI</span>
             </div>
           )}
-          <span className="text-lg">{currentPersona.name}</span>
+          <span className="text-lg">{personas[currentIndex].name}</span>
         </div>
 
         <button
