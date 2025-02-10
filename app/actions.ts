@@ -62,7 +62,8 @@ export const updateSessionPersona = async (
         },
         output: {
             stream_transcript: true,
-            speech_synthesis_enabled: true
+            speech_synthesis_enabled: true,
+            answer_message: "Hey, what do you want?"
         }
     };
 
