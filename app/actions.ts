@@ -96,6 +96,21 @@ export const updateSessionPersona = async (
             data: response.data
         });
 
+        // Make the "Hey" call after successful update
+        await axios.post(
+            `https://api.gabber.dev/v1/realtime/${sessionId.trim()}/speak`,
+            {
+                text: "Hey"
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'x-api-key': `${process.env.GABBER_API_KEY}`
+                }
+            }
+        );
+
         return response.data;
     } catch (error) {
         // Enhanced error logging

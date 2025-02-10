@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { ApiProvider } from 'gabber-client-react';
 import { PersonaSelector } from '@/components/PersonaSelector';
 import { PersonaCreator } from '@/components/PersonaCreator';
-import { Terminal } from 'lucide-react';
+import { Terminal, Phone } from 'lucide-react';
 import { generateUserToken } from './actions';
 
 export default function Home() {
@@ -33,11 +33,20 @@ export default function Home() {
           <div className="border-2 border-green-500 p-6 mb-8">
             <div className="flex items-center justify-center gap-3 mb-4">
               <Terminal className="w-8 h-8" />
-              <h1 className="text-4xl font-bold tracking-tight text-center">PERSONA.SYS</h1>
+              <h1 className="text-4xl font-bold tracking-tight text-center">FRIEND ROULETTE</h1>
             </div>
             <div className="text-center text-sm">
-              <p>GABBER INTERFACE v2.0</p>
+              <p>BUILT WITH GABBER.DEV</p>
+              <p>STEAL THE CODE FOR THIS:</p>
+              <p><a href="https://github.com/gabber-dev/friend-roulette" target="_blank" rel="noopener noreferrer">github.com/gabber-dev/friend-roulette</a></p>
               <p>© 2025 - ALL RIGHTS RESERVED</p>
+              <div className="mt-4 flex items-center justify-center gap-2">
+                <Phone className="w-4 h-4" />
+                <p>CALL ME: +1 213-577-2355</p>
+              </div>
+              <p className="mt-2 text-xs text-green-500/70">
+                [SAY &quot;CAN I TALK TO SOMEONE ELSE?&quot; (or hit the arrows)]
+              </p>
             </div>
           </div>
 

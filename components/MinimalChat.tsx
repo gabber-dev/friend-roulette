@@ -75,11 +75,9 @@ export const MinimalChat = ({ personas }: { personas: Persona[] }) => {
   };
 
   const handleToolCalls = (message: { tool_calls?: Array<ContextMessageToolCall> }) => {
-    console.log('Tool callsn function:', message.tool_calls);
 
     if (!message.tool_calls?.length) return;
     
-    console.log('Tool callsn function in function:', message.tool_calls);
     message.tool_calls.forEach(toolCall => {
       if (toolCall.type === 'gabber_tool') {
         switch (toolCall.function.name) {
