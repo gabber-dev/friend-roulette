@@ -1,16 +1,15 @@
 "use server"
 import axios from "axios";
 
+const API_KEY = //<Add your API key here>
+
 export const generateUserToken = async () => {
-    const response = await axios.post('https://api.gabber.dev/v1/usage/token', {
+    const response = await axios.post(`https://api.gabber.dev/v1/usage/token`, {
         human_id: crypto.randomUUID(),
-        limits: [
-            { type: 'conversational_seconds', value: 500 },
-            { type: 'voice_synthesis_seconds', value: 1000 }
-        ]
+        ttl_seconds: 3600
     }, {
         headers: {
-            'X-api-key': `${process.env.GABBER_API_KEY}`
+            'X-api-key': `${API_KEY}`
         }
     });
 
@@ -74,7 +73,7 @@ export const updateSessionPersona = async (
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'x-api-key': process.env.GABBER_API_KEY ? '[PRESENT]' : '[MISSING]'
+                'x-api-key': `${API_KEY}`
             },
             data: updateData
         });
@@ -86,7 +85,7 @@ export const updateSessionPersona = async (
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
-                    'x-api-key': `${process.env.GABBER_API_KEY}`
+                    'x-api-key': `${API_KEY}`
                 }
             }
         );
@@ -107,7 +106,7 @@ export const updateSessionPersona = async (
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',
-                    'x-api-key': `${process.env.GABBER_API_KEY}`
+                    'x-api-key': `${API_KEY}`
                 }
             }
         );
